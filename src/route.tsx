@@ -1,14 +1,14 @@
 import { createBrowserRouter } from "react-router";
 import React from 'react';
-// import AppLayout from './layout/AppLayout';
 // import HomePage from './pages/HomePage/HomePage';
 // import SearchPage from './pages/SearchPage/SearchPage';
 // import PlayListPage from './pages/PlayListPage/PlayListPage';
 // import PlayListDetailPage from './pages/PlayListDetailPage/PlayListDetailPage';
 // import SearchWithKeywordPage from './pages/SearchWithKeywordPage/SearchWithKeywordPage';
 
+import AppLayout from './layout/AppLayout';
+
 //lazy loading
-const AppLayout = React.lazy(() => import('./layout/AppLayout'));
 const HomePage = React.lazy(() => import('./pages/HomePage/HomePage'));
 const SearchPage = React.lazy(() => import('./pages/SearchPage/SearchPage'));
 const SearchWithKeywordPage = React.lazy(() => import('./pages/SearchWithKeywordPage/SearchWithKeywordPage'));

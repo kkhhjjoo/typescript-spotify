@@ -15,8 +15,22 @@ module.exports = (env, argv) => {
     module: {
       rules: [ //다양한 파일 형식을 처리하기 위한 규칙을 정의합니다.
         {
+          test: /\.module\.css$/i,
+          use: [
+            "style-loader",
+            {
+              loader: "css-loader",
+              options: {
+                modules: true,
+                esModule: false,
+              },
+            },
+          ],
+        },
+        {
           test: /\.css$/i,
-          use: ["style-loader", "css-loader"],//CSS 파일 처리
+          exclude: /\.module\.css$/,
+          use: ["style-loader", "css-loader"],
         },
         {
           test: /\.svg$/,
