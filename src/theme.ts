@@ -46,19 +46,24 @@ const theme = createTheme({
           borderRadius: "30px",
           textTransform: "none",
         },
-        containedSecondary: {
-          backgroundColor: "#ffffff",
-          color: "#000000",
-          "&:hover": {
-            backgroundColor: "#e0e0e0",
-          },
-        },
         sizeLarge: {
           padding: "8px 32px",
           fontWeight: 700,
           fontSize: "16px",
         },
       },
+      variants: [
+        {
+          props: { variant: "contained", color: "secondary" },
+          style: {
+            backgroundColor: "#ffffff",
+            color: "#000000",
+            "&:hover": {
+              backgroundColor: "#e0e0e0",
+            },
+          },
+        },
+      ],
     },
   },
 });
