@@ -98,9 +98,11 @@ module.exports = (env, argv) => {
         template: path.resolve(__dirname, "index.html"),
       }),
       new Dotenv({
+        path: './.env', 
         //환경 변수 파일을 로드합니다.
         allowEmptyValues: true,
         systemvars: true,
+        silent: true,
       }),
     ],
   };
