@@ -3,12 +3,14 @@ import { styled, Typography, Button } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import AddIcon from '@mui/icons-material/Add';
 
+import styles from './LibraryHead.module.css';
+
 const NavLink = styled(RouterNavLink)(({ theme }) => ({
   textDecoration: 'none',
   display: 'flex',
-  justifyContent: 'space-between',
   alignItems: 'center',
-  padding: '8px',
+  flex: 'none',
+  gap: '20px',
   color: theme.palette.text.secondary,
   '&:hover': {
     color: theme.palette.text.primary
@@ -23,14 +25,14 @@ const LibraryHead = () => {
 
   }
   return (
-      <ul>
+      <ul className={styles.flex}>
         <NavLink to="/playlist">
-          <BookmarkIcon sx={{marginRight:'20px'}} />
+          <BookmarkIcon />
           <Typography variant="h2" sx={{ fontWeight: 700 }}>
             Your Library
           </Typography>
         </NavLink>
-        <Button onClick={handleCreatePlayList}>
+        <Button sx={{ marginLeft: '100px' }} onClick={handleCreatePlayList}>
           <AddIcon />
         </Button>
       </ul>

@@ -21,7 +21,7 @@ const NavLink = styled(RouterNavLink)(({ theme }) => ({
   textDecoration: 'none',
   display: 'flex',
   alignItems: 'center',
-  gap: '20px',
+  margin: '20px 0',
   color: theme.palette.text.secondary,
   '&:hover': {
     color: theme.palette.text.primary
@@ -36,7 +36,8 @@ const ContentBox = styled(Box)(({ theme }) => ({
   background: theme.palette.background.paper,
   color: theme.palette.text.primary,
   width: '100%',
-  padding: '8px',
+  padding: '20px',
+  textAlign: 'center',
   marginBottom: '8px',
   marginRight: '8px',
 }));
@@ -49,10 +50,10 @@ const AppLayout = () => {
           <ul className={styles.navList}>
             <NavLink to="/">
             <HomeIcon fontSize="small" />
-            <Typography variant="h2" sx={{ fontWeight: 700 }}>홈</Typography></NavLink>
+            <Typography variant="h2" sx={{ fontWeight: 700, marginLeft: '10px' }}>홈</Typography></NavLink>
             <NavLink to="/search">
               <SearchIcon fontSize="small" />
-              <Typography variant="h2" sx={{ fontWeight: 700 }}>검색</Typography>
+              <Typography variant="h2" sx={{ fontWeight: 700, marginLeft: '10px' }}>검색</Typography>
             </NavLink>
           </ul>
         </ContentBox>
