@@ -1,0 +1,20 @@
+{
+  "presets": [
+    "@babel/preset-env",
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic" //바벨이 리액트 코드를 변환할 때, React를 명시적으로 import하지 않아도 JSX 문법을
+      }
+    ],
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true //비동기 코드에서 사용되는 regeneratorRuntime을 자동으로 포함합니다.
+      }
+    ]
+  ]
+}
