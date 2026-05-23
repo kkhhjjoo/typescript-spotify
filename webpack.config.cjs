@@ -10,10 +10,17 @@ module.exports = (env, argv) => {
     mode: isProduction ? "production" : "development",
     entry: path.resolve(__dirname, "src", "main.tsx"), //프로젝트가 시작되는 파일을 지정합니다.
     resolve: {
-      extensions: [".tsx", ".ts", ".js"],
+      extensions: [".tsx", ".ts", ".js", ".mjs"],
+      fullySpecified: false,
     },
     module: {
       rules: [ //다양한 파일 형식을 처리하기 위한 규칙을 정의합니다.
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto',
+          resolve: { fullySpecified: false },
+        },
         {
           test: /\.module\.css$/i,
           use: [
