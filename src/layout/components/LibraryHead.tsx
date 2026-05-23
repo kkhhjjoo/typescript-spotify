@@ -1,8 +1,9 @@
-import { styled, Link, Typography, Button } from '@mui/material';
+import { NavLink as RouterNavLink } from 'react-router';
+import { styled, Typography, Button } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import AddIcon from '@mui/icons-material/Add';
 
-const NavLink = styled(Link)(({ theme }) => ({
+const NavLink = styled(RouterNavLink)(({ theme }) => ({
   textDecoration: 'none',
   display: 'flex',
   justifyContent: 'space-between',
@@ -18,21 +19,21 @@ const NavLink = styled(Link)(({ theme }) => ({
 }));
 
 const LibraryHead = () => {
-  const handleCreatePlayList = () => { 
+  const handleCreatePlayList = () => {
 
   }
   return (
       <ul>
-            <NavLink to="/playlist/:id">
-        <BookmarkIcon sx={{marginRight:'20px'}} />
-              <Typography variant="h2" fontWeight={700}>
-                Your Library
-              </Typography>
-            </NavLink>
-            <Button onClick={handleCreatePlayList}>
-                  <AddIcon />
-            </Button>
-          </ul>
+        <NavLink to="/playlist">
+          <BookmarkIcon sx={{marginRight:'20px'}} />
+          <Typography variant="h2" sx={{ fontWeight: 700 }}>
+            Your Library
+          </Typography>
+        </NavLink>
+        <Button onClick={handleCreatePlayList}>
+          <AddIcon />
+        </Button>
+      </ul>
   )
 }
 

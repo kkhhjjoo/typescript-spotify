@@ -56,7 +56,7 @@ const AppLayout = () => {
             </NavLink>
           </ul>
         </ContentBox>
-        <ContentBox height="100%">
+        <ContentBox sx={{ flex: 1, overflow: 'auto' }}>
           <LibraryHead />
           <Library />
         </ContentBox>
