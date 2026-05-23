@@ -47,6 +47,7 @@
     "postcss": "^8.5.15",
     "postcss-loader": "^8.2.1",
     "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.7",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12",
