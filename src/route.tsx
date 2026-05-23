@@ -1,20 +1,5 @@
 import { createBrowserRouter } from "react-router";
-import React from 'react';
-// import HomePage from './pages/HomePage/HomePage';
-// import SearchPage from './pages/SearchPage/SearchPage';
-// import PlayListPage from './pages/PlayListPage/PlayListPage';
-// import PlayListDetailPage from './pages/PlayListDetailPage/PlayListDetailPage';
-// import SearchWithKeywordPage from './pages/SearchWithKeywordPage/SearchWithKeywordPage';
-
 import AppLayout from './layout/AppLayout';
-
-//lazy loading
-const HomePage = React.lazy(() => import('./pages/HomePage/HomePage'));
-const SearchPage = React.lazy(() => import('./pages/SearchPage/SearchPage'));
-const SearchWithKeywordPage = React.lazy(() => import('./pages/SearchWithKeywordPage/SearchWithKeywordPage'));
-const PlayListDetailPage = React.lazy(() => import('./pages/PlayListDetailPage/PlayListDetailPage'));
-const PlayListPage = React.lazy(() => import('./pages/PlayListPage/PlayListPage'));
-
 
 export const router = createBrowserRouter([
   {
@@ -23,25 +8,24 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />
+        lazy: () => import('./pages/HomePage/HomePage').then(m => ({ Component: m.default }))
       },
       {
-    path: 'search',
-    element: <SearchPage />
+        path: 'search',
+        lazy: () => import('./pages/SearchPage/SearchPage').then(m => ({ Component: m.default }))
       },
       {
-    path: 'search/:keyword',
-    element: <SearchWithKeywordPage />
+        path: 'search/:keyword',
+        lazy: () => import('./pages/SearchWithKeywordPage/SearchWithKeywordPage').then(m => ({ Component: m.default }))
       },
       {
-    path: 'playlist/:id',
-    element: <PlayListDetailPage />
+        path: 'playlist/:id',
+        lazy: () => import('./pages/PlayListDetailPage/PlayListDetailPage').then(m => ({ Component: m.default }))
       },
       {
-    path: 'playlist',
-    element: <PlayListPage />
-  }
+        path: 'playlist',
+        lazy: () => import('./pages/PlayListPage/PlayListPage').then(m => ({ Component: m.default }))
+      }
     ]
   }
-  
 ]);
