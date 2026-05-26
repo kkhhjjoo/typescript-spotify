@@ -6,6 +6,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import LibraryHead from './components/LibraryHead';
 import Library from './components/Library';
+import Navbar from './components/Navbar';
+import ErrorBoundary from '../common/components/ErrorBoundary';
 
 const Sidebar = styled('div')(({ theme }) => ({ 
   width: '331px',
@@ -62,9 +64,14 @@ const AppLayout = () => {
           <Library />
         </ContentBox>
       </Sidebar>  
-      <Suspense fallback={<div>로딩중...</div>}>
-        <Outlet />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<div>로딩중...</div>}>
+          <ContentBox>
+            <Navbar />
+            <Outlet />
+          </ContentBox>
+        </Suspense>
+      </ErrorBoundary>
     </div >
    
   )

@@ -32,7 +32,7 @@ const LibraryHead = () => {
             Your Library
           </Typography>
         </NavLink>
-        <Button sx={{ marginLeft: '100px' }} onClick={handleCreatePlayList}>
+        <Button sx={{ marginLeft: '50px' }} onClick={handleCreatePlayList}>
           <AddIcon />
         </Button>
       </ul>

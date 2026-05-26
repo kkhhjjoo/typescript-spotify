@@ -1,0 +1,35 @@
+import { Grid, Typography } from '@mui/material'
+import useGetNewReleases from '../../../../hooks/useGetNewReleases'
+import { useAuth } from '../../../../hooks/useAuth';
+import { ClipLoader } from "react-spinners";
+import ErrorMessage from '../../../../common/components/ErrorMessage/ErrorMessage';
+import Card from '../../../../common/components/Card/Card';
+
+const NewReleases = () => {
+  const { token } = useAuth();
+  const { data, error, isLoading } = useGetNewReleases();
+  console.log('[NewReleases] token:', !!token, '| isLoading:', isLoading, '| error:', error, '| data:', data);
+
+  if (!token) return <Typography>로그인이 필요합니다.</Typography>
+  if (isLoading) return <ClipLoader
+        size={150}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
+  if (error) return <ErrorMessage errorMessage={error.message} />
+
+  return (
+    <div>
+      <Typography variant="h1" sx={{ paddingTop: '8px', textAlign: 'left' }}>New Released Album</Typography>
+      {data && data.albums.items.length > 0 ? <Grid container spacing={2}>
+        {data.albums.items.map((album) => (
+          <Grid size={{ xs: 6, sm: 4, md: 2 }} key={album.id}>
+            <Card image={album.images[0].url} name={album.name} artistName={album.artists[0].name} />
+          </Grid>
+        ))}
+      </Grid> : <Typography variant='h2'>No Data</Typography>}
+    </div>
+  )
+}
+
+export default NewReleases

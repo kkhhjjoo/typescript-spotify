@@ -1,7 +1,9 @@
+import NewReleases from './components/NewReleases/NewReleases'
+
 const HomePage = () => {
   return (
     <div>
-      홈페이지
+      <NewReleases />
     </div>
   )
 }

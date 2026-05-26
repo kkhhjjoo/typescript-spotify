@@ -25,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: 'playlist',
         lazy: () => import('./pages/PlayListPage/PlayListPage').then(m => ({ Component: m.default }))
+      },
+      {
+        path: 'callback',
+        lazy: () => import('./pages/CallbackPage/CallbackPage').then(m => ({ Component: m.default }))
       }
     ]
   }
