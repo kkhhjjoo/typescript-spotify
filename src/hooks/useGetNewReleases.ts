@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { getNewReleases } from '../apis/albumApi';
-import { useAuth } from './useAuth';
+import useClientCredentialToken from './useClientCredentialToken';
 
 const useGetNewReleases = () => {
-  const { token } = useAuth();
+  const token = useClientCredentialToken();
   return useQuery({
-    queryKey: ['new-releases', token],
+    queryKey: ['new-releases'],
     queryFn: () => getNewReleases(token!),
     enabled: !!token,
   });
