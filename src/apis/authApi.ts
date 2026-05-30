@@ -103,6 +103,9 @@ export const getClientCredentialToken = async ():Promise<ClientCredentialTokenRe
     });
     return response.data;
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('[clientCredential] status:', error.response?.status, '| body:', error.response?.data, '| CLIENT_ID empty?', !CLIENT_ID, '| CLIENT_SECRET empty?', !CLIENT_SECRET);
+    }
     throw new Error('Fail to fetch client credential token', { cause: error });
   }
 };
