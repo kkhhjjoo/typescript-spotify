@@ -1,14 +1,14 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query'
-import { useGetCurrentUserProfile } from '../apis/userApi'
+import { getCurrentUserProfile } from '../apis/userApi'
 import type { User } from '../models/user';
+import { useAuth } from './useAuth';
 
-
-const useGetCurrentProfile = ():UseQueryResult<User, Error> => { 
-  const accessToken = localStorage.getItem('access_token');
+const useGetCurrentProfile = ():UseQueryResult<User, Error> => {
+  const { token } = useAuth();
   return useQuery({
     queryKey: ['current-user-profile'],
-    queryFn: useGetCurrentUserProfile,
-    enabled: !!accessToken
+    queryFn: getCurrentUserProfile,
+    enabled: !!token
   })
 }
 
