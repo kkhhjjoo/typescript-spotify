@@ -1,7 +1,13 @@
+import { useState } from 'react';
 import { NavLink as RouterNavLink } from 'react-router';
 import { styled, Typography, Button } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios';
+import CreatePlaylistDialog from '../../common/components/CreatePlaylistDialog';
+import useCreatePlaylist from '../../hooks/useCreatePlaylist';
+import { useAuth } from '../../hooks/useAuth';
+import { loginWithPKCE } from '../../apis/authApi';
 
 import styles from './LibraryHead.module.css';
 
@@ -21,10 +27,25 @@ const NavLink = styled(RouterNavLink)(({ theme }) => ({
 }));
 
 const LibraryHead = () => {
-  const handleCreatePlayList = () => {
+  const [open, setOpen] = useState(false);
+  const { mutate, isPending, isError, error, reset } = useCreatePlaylist();
+  const { logout } = useAuth();
 
-  }
+  const is403 = isError && axios.isAxiosError(error) && error.response?.status === 403;
+
+  const handleConfirm = (name: string) => {
+    mutate(name, { onSuccess: () => { setOpen(false); reset(); } });
+  };
+
+  const handleClose = () => { setOpen(false); reset(); };
+
+  const handleRelogin = () => {
+    logout();
+    loginWithPKCE();
+  };
+
   return (
+    <>
       <ul className={styles.flex}>
         <NavLink to="/playlist">
           <BookmarkIcon />
@@ -32,11 +53,20 @@ const LibraryHead = () => {
             Your Library
           </Typography>
         </NavLink>
-        <Button sx={{ marginLeft: '50px' }} onClick={handleCreatePlayList}>
+        <Button sx={{ marginLeft: '50px' }} onClick={() => setOpen(true)}>
           <AddIcon />
         </Button>
       </ul>
-  )
-}
+      <CreatePlaylistDialog
+        open={open}
+        onClose={handleClose}
+        onConfirm={handleConfirm}
+        onRelogin={handleRelogin}
+        isLoading={isPending}
+        isPermissionError={is403}
+      />
+    </>
+  );
+};
 
-export default LibraryHead
+export default LibraryHead;

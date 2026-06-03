@@ -1,4 +1,4 @@
-import { CLIENT_ID } from '../configs/authConfig';
+import { CLIENT_ID, SCOPES } from '../configs/authConfig';
 import { REDIRECT_URI } from '../configs/commonConfig';
 import type { AuthUrlParams } from '../models/auth';
 import { generateRandomString, sha256, base64encode } from './crypto'
@@ -10,7 +10,7 @@ export const getSpotifyAuthUrl = async() => {
 
 const redirectUri = REDIRECT_URI;
 
-const scope = 'user-read-private user-read-email';
+const scope = SCOPES;
 const authUrl = new URL("https://accounts.spotify.com/authorize")
 
 // generated in the previous step

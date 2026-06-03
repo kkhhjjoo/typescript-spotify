@@ -3,7 +3,7 @@ import type { ClientCredentialTokenResponse, ExchangeTokenResponse, PKCETokenRes
 import { CLIENT_ID, CLIENT_SECRET, redirectUri } from '../configs/authConfig';
 import { REDIRECT_URI } from '../configs/commonConfig';
 
-const SCOPES = 'user-read-private user-read-email user-library-read';
+const SCOPES = 'user-read-private user-read-email user-library-read playlist-read-private playlist-modify-private playlist-modify-public';
 
 const base64urlEncode = (bytes: Uint8Array): string =>
   btoa(String.fromCharCode(...bytes))
@@ -35,6 +35,7 @@ export const loginWithPKCE = async (): Promise<void> => {
     scope: SCOPES,
     code_challenge_method: 'S256',
     code_challenge: challenge,
+    show_dialog: 'true',
   });
 
   window.location.href = `https://accounts.spotify.com/authorize?${params}`;
@@ -54,7 +55,6 @@ export const refreshAccessToken = async (refreshToken: string): Promise<PKCEToke
 
 export const exchangeCodeForToken = async (code: string): Promise<PKCETokenResponse> => {
   const verifier = sessionStorage.getItem('code_verifier');
-  console.log('[auth] redirectUri:', redirectUri, '| verifier exists:', !!verifier);
   if (!verifier) throw new Error('No code verifier found');
 
   const body = new URLSearchParams({
