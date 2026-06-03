@@ -1,10 +1,13 @@
 import { Navigate, useParams } from 'react-router'
 import useGetPlaylist from '../../hooks/useGetPlaylist';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 
 import { Grid } from '@mui/system';
 import DefaultImage from '../../common/components/DefaultImage';
+import useGetPlaylistItems from '../../hooks/useGetPlaylistItems';
+import DesktopPlaylistItem from './components/DesktopPlaylistItem';
+import { PAGE_LIMIT } from '../../configs/commonConfig';
 
 
 const PlaylistHeader = styled(Grid)({
@@ -33,31 +36,51 @@ const AlbumImage = styled('img')(({ theme }) => ({
 
 const PlayListDetailPage = () => {
   const { id } = useParams<{id: string}>();
-  const { data:playlist } = useGetPlaylist({playlistId: id ?? ''})
+  const { data: playlist } = useGetPlaylist({ playlistId: id ?? '' })
+  const { data: playlistItems } = useGetPlaylistItems({playlistId: id ?? '', limit: PAGE_LIMIT, offset: 0});
   if (id === undefined) return <Navigate to="/" />
   return (
-    <PlaylistHeader container spacing={7}>
-      <ImageGrid size={{ sm: 12, md: 2 }}>
-        {playlist?.images ? (
-          <AlbumImage src={playlist?.images[0].url} alt="playlist_cover" />
-        ) : (
-            <DefaultImage>
-              <MusicNoteIcon fontSize='large' />
-            </DefaultImage>
-        )}
-      </ImageGrid>
-      <Grid size={{ sm: 12, md: 10 }}>
-        <Box display="flex" alignItems="center">
-          <img src="https://i.scdn.co/image/ab67757000003b8255c25988a6ac314394d3fbf5" width="20" alt="" />
-          <Typography variant="subtitle1" sx={{ color: 'white', ml: 1, fontWeight: 700 }}>
-            {playlist?.owner?.display_name? playlist?.owner.display_name : 'unknown'}
-          </Typography>
-          <Typography variant='subtitle1' sx={{ color: 'white' }}>
-             • {playlist?.tracks?.total} songs
-          </Typography>
-        </Box>
-      </Grid>
-    </PlaylistHeader>
+    <div>
+      <PlaylistHeader container spacing={7}>
+        <ImageGrid size={{ sm: 12, md: 2 }}>
+          {playlist?.images ? (
+            <AlbumImage src={playlist?.images[0].url} alt="playlist_cover" />
+          ) : (
+              <DefaultImage>
+                <MusicNoteIcon fontSize='large' />
+              </DefaultImage>
+          )}
+        </ImageGrid>
+        <Grid size={{ sm: 12, md: 10 }}>
+          <Box display="flex" alignItems="center">
+            <img src="https://i.scdn.co/image/ab67757000003b8255c25988a6ac314394d3fbf5" width="20" alt="" />
+            <Typography variant="subtitle1" sx={{ color: 'white', ml: 1, fontWeight: 700 }}>
+              {playlist?.owner?.display_name? playlist?.owner.display_name : 'unknown'}
+            </Typography>
+            <Typography variant='subtitle1' sx={{ color: 'white' }}>
+               • {playlist?.track?.total} songs
+            </Typography>
+          </Box>
+        </Grid>
+      </PlaylistHeader>
+      {playlist?.track?.total === 0 ? <Typography>Search</Typography> : <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>#</TableCell>
+            <TableCell>Title</TableCell>
+            <TableCell>Album</TableCell>
+            <TableCell>Date added</TableCell>
+            <TableCell>Duration</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {playlistItems?.pages.map((page, pageIndex) => page.items.map((item, itemIndex) => {
+            return <DesktopPlaylistItem item={item} key={pageIndex * PAGE_LIMIT + itemIndex + 1} index={pageIndex * PAGE_LIMIT + itemIndex + 1} />
+          }
+          ))}
+        </TableBody>
+      </Table>}
+    </div>
   )
 }
 
