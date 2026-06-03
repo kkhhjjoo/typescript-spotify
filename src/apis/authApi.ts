@@ -3,7 +3,7 @@ import type { ClientCredentialTokenResponse, ExchangeTokenResponse, PKCETokenRes
 import { CLIENT_ID, CLIENT_SECRET, redirectUri } from '../configs/authConfig';
 import { REDIRECT_URI } from '../configs/commonConfig';
 
-const SCOPES = 'user-read-private user-read-email user-library-read playlist-read-private playlist-modify-private playlist-modify-public';
+const SCOPES = 'user-read-private user-read-email user-library-read playlist-read-private playlist-modify-private playlist-modify-public user-library-read user-library-modify';
 
 const base64urlEncode = (bytes: Uint8Array): string =>
   btoa(String.fromCharCode(...bytes))
