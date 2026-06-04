@@ -1,20 +1,23 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPlaylist } from '../apis/playlistApi';
 import useGetCurrentProfile from './useGetCurrentUserProfile';
+import type { CreatePlaylistRequest } from '../models/playlist';
 
 const useCreatePlaylist = () => {
   const queryClient = useQueryClient();
-  const { data: profile } = useGetCurrentProfile();
-
+  const { data: user } = useGetCurrentProfile();
   return useMutation({
-    mutationFn: (name: string) => {
-      if (!profile?.id) throw new Error('사용자 정보를 불러올 수 없습니다.');
-      return createPlaylist(profile.id, name);
+    mutationFn: (params: CreatePlaylistRequest) => {
+      if (user) { 
+        return createPlaylist(user?.id,  params);
+      }
+      return Promise.reject(new Error('user is not defined'))
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['current-user-playlists'] });
-    },
+      queryClient.invalidateQueries({ queryKey: ['current-user-playlists']})
+    }
   });
+  
 };
 
 export default useCreatePlaylist;

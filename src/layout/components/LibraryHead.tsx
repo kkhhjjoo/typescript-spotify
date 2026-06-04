@@ -10,6 +10,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { loginWithPKCE } from '../../apis/authApi';
 
 import styles from './LibraryHead.module.css';
+import useGetCurrentProfile from '../../hooks/useGetCurrentUserProfile';
+import { getSpotifyAuthUrl } from '../../utils/auth';
 
 const NavLink = styled(RouterNavLink)(({ theme }) => ({
   textDecoration: 'none',
@@ -44,6 +46,17 @@ const LibraryHead = () => {
     loginWithPKCE();
   };
 
+  const { mutate: createPlaylist } = useCreatePlaylist();
+  const { data: userProfile } = useGetCurrentProfile();
+
+  const handleCreatePlaylist = () => {
+    if (userProfile) {
+      createPlaylist({ name: '나의 플레이리스트' });
+    } else {
+      getSpotifyAuthUrl();
+    }
+  }
+
   return (
     <>
       <ul className={styles.flex}>
@@ -53,7 +66,7 @@ const LibraryHead = () => {
             Your Library
           </Typography>
         </NavLink>
-        <Button sx={{ marginLeft: '50px' }} onClick={() => setOpen(true)}>
+        <Button sx={{ marginLeft: '50px' }} onClick={handleCreatePlaylist}>
           <AddIcon />
         </Button>
       </ul>

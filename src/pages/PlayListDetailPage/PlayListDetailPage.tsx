@@ -8,6 +8,8 @@ import DefaultImage from '../../common/components/DefaultImage';
 import useGetPlaylistItems from '../../hooks/useGetPlaylistItems';
 import DesktopPlaylistItem from './components/DesktopPlaylistItem';
 import { PAGE_LIMIT } from '../../configs/commonConfig';
+import ErrorMessage from '../../common/components/ErrorMessage/ErrorMessage';
+import EmptyPlaylist from '../../layout/components/EmptyPlaylist';
 
 
 const PlaylistHeader = styled(Grid)({
@@ -39,6 +41,22 @@ const PlayListDetailPage = () => {
   const { data: playlist } = useGetPlaylist({ playlistId: id ?? '' })
   const { data: playlistItems } = useGetPlaylistItems({playlistId: id ?? '', limit: PAGE_LIMIT, offset: 0});
   if (id === undefined) return <Navigate to="/" />
+  if (error || playlistError) { 
+    if (error?.error.status === 401) { 
+      retrun (
+        <Box                           display="flex"                   alignItems="center"
+          justifyContent="center"
+          height="100%"
+          flexDirection="column"
+        >
+          <Typography variant='h2' fontWeight={700} mb="20px">
+            다시 로그인하세요.
+          </Typography>
+        </Box>
+      );
+    }
+    return <ErrorMessage errorMessage='Fail to load' />
+  }
   return (
     <div>
       <PlaylistHeader container spacing={7}>
@@ -63,7 +81,7 @@ const PlayListDetailPage = () => {
           </Box>
         </Grid>
       </PlaylistHeader>
-      {playlist?.track?.total === 0 ? <Typography>Search</Typography> : <Table>
+      {playlist?.track?.total === 0 ? <Typography><EmptyPlaylist /></Typography> : <Table>
         <TableHead>
           <TableRow>
             <TableCell>#</TableCell>
