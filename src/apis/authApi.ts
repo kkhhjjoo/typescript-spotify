@@ -38,7 +38,9 @@ export const loginWithPKCE = async (): Promise<void> => {
     show_dialog: 'true',
   });
 
-  window.location.href = `https://accounts.spotify.com/authorize?${params}`;
+  const authUrl = `https://accounts.spotify.com/authorize?${params}`;
+  console.log('[AUTH] Redirecting to:', authUrl);
+  window.location.href = authUrl;
 };
 
 export const refreshAccessToken = async (refreshToken: string): Promise<PKCETokenResponse> => {

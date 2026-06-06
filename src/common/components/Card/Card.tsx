@@ -16,11 +16,12 @@ interface CardProps {
   name: string | undefined;
   image: string | undefined;
   artistName?: string | undefined;
+  onClick?: () => void;
 }
 
-const Card = ({ image, name, artistName }: CardProps) => {
+const Card = ({ image, name, artistName, onClick }: CardProps) => {
   return (
-    <CardContainer>
+    <CardContainer onClick={onClick}>
       <div className={styles.imageContainer}>
         <img className={styles.albumImage} src={image} alt={name} />
         <div className={styles.overlay}>

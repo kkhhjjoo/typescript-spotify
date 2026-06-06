@@ -3,6 +3,7 @@ import type { ExternalUrls, Image } from './commonType';
 
 export interface Track {
   id?: string;
+  uri?: string;
   album?: {
     album_type: string;
     total_tracks: number;

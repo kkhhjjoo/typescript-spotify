@@ -4,6 +4,9 @@ import { useSearchItemsByKeyword } from '../../../hooks/useSearchItemsByKeyword'
 import SearchIcon from '@mui/icons-material/Search';
 import { SEARCH_TYPE } from '../../../models/search';
 import SearchResultList from '../../SearchPage/components/SearchResultList';
+import useAddTrackToPlaylist from '../../../hooks/useAddTrackToPlaylist';
+import { addTrackToLocalPlaylist } from '../../../utils/localPlaylistManager';
+import type { Track } from '../../../models/track';
 
 const Wrapper = styled('div')({
   width: '100%',
@@ -16,19 +19,17 @@ const StyledTextField = styled(TextField)({
     color: 'white',
   },
   '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: 'transparent',
-    },
-    '&:hover fieldset': {
-      borderColor: 'gray',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: 'gray',
-    },
+    '& fieldset': { borderColor: 'transparent' },
+    '&:hover fieldset': { borderColor: 'gray' },
+    '&.Mui-focused fieldset': { borderColor: 'gray' },
   },
 });
 
-const EmptyPlaylistWithSearch = () => {
+interface EmptyPlaylistWithSearchProps {
+  playlistId: string;
+}
+
+const EmptyPlaylistWithSearch = ({ playlistId }: EmptyPlaylistWithSearchProps) => {
   const [keyword, setKeyword] = useState<string>('');
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useSearchItemsByKeyword({
@@ -36,24 +37,27 @@ const EmptyPlaylistWithSearch = () => {
     type: [SEARCH_TYPE.Track],
   });
 
+  const { mutate: addTrack } = useAddTrackToPlaylist();
+
   const tracks = data?.pages.flatMap((page) => page.tracks?.items ?? []) ?? [];
 
-  const handleSearchKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
+  const handleAdd = (track: Track) => {
+    if (playlistId.startsWith('local-')) {
+      addTrackToLocalPlaylist(playlistId, track);
+    } else if (track.uri) {
+      addTrack({ playlistId, trackUri: track.uri });
+    }
   };
 
   return (
     <Wrapper>
-      <p style={{ margin: '10px 0', fontSize: '1.25rem', fontWeight: 600 }}>
-        Let's find something for your playlist
-      </p>
       <StyledTextField
         value={keyword}
         autoComplete="off"
         variant="outlined"
-        placeholder="Search for songs or episodes"
+        placeholder="노래를 검색하세요"
         fullWidth
-        onChange={handleSearchKeyword}
+        onChange={(e) => setKeyword(e.target.value)}
         slotProps={{
           input: {
             startAdornment: (
@@ -70,6 +74,7 @@ const EmptyPlaylistWithSearch = () => {
           hasNextPage={hasNextPage ?? false}
           isFetchingNextPage={isFetchingNextPage}
           fetchNextPage={fetchNextPage}
+          onAdd={handleAdd}
         />
       )}
     </Wrapper>

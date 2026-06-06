@@ -1,16 +1,16 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { getPlaylistItems } from '../apis/playlistApi';
 import type { GetPlaylistItemsRequest } from '../models/playlist'
 
-
-const useGetPlaylistItems = (params: GetPlaylistItemsRequest) => { 
+const useGetPlaylistItems = (params: GetPlaylistItemsRequest) => {
   return useInfiniteQuery({
     queryKey: ['playlist-items', params],
-    queryFn: ({ pageParams}) => { 
-      return getPlaylistItems({offset: pageParam, ...params})
+    queryFn: ({ pageParam }) => {
+      return getPlaylistItems({ ...params, offset: pageParam as number })
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => { 
-      if (lastPage.next) { 
+    getNextPageParam: (lastPage) => {
+      if (lastPage.next) {
         const url = new URL(lastPage.next);
         const nextOffset = url.searchParams.get('offset');
         return nextOffset ? parseInt(nextOffset) : undefined;

@@ -13,18 +13,14 @@ export const getCurrentUserPlaylists = async ({limit, offset}: GetCurrentUserPla
 }
 
 export const createPlaylist = async (userId: string, params: CreatePlaylistRequest): Promise<SimplifiedPlaylist> => {
-  try {
-    const { name, playlistPublic, collaborative, description } = params;
-    const response = await api.post(`/users/${userId}/playlists`, {
-      name,
-      public: playlistPublic,
-      collaborative,
-      description
-    })
-    return response.data;
-  } catch (error) { 
-    throw new Error('Fail to create playlist', { cause: error })
-  }
+  const { name, playlistPublic, collaborative, description } = params;
+  const response = await api.post(`/users/${userId}/playlists`, {
+    name,
+    public: playlistPublic,
+    collaborative,
+    description
+  });
+  return response.data;
 }
 
 export const getPlaylist = async (params: GetPlaylistRequest):Promise<Playlist> => { 
@@ -44,7 +40,15 @@ export const getPlaylistItems = async (params: GetPlaylistItemsRequest):Promise<
       params
     });
     return response.data;
-  } catch (error) { 
+  } catch (error) {
     throw new Error('Fail to fetch playlist items',  { cause: error })
+  }
+}
+
+export const addTrackToPlaylist = async (playlistId: string, trackUri: string): Promise<void> => {
+  try {
+    await api.post(`/playlists/${playlistId}/tracks`, { uris: [trackUri] });
+  } catch (error) {
+    throw new Error('Fail to add track to playlist', { cause: error });
   }
 }

@@ -23,6 +23,7 @@ const CallbackPage = () => {
 
     exchangeCodeForToken(code)
       .then((data) => {
+        console.log('[CALLBACK] Spotify가 승인한 스코프:', data.scope);
         saveToken(data.access_token, data.refresh_token);
         navigate('/');
       })

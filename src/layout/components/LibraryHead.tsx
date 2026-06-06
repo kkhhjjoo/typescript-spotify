@@ -10,8 +10,6 @@ import { useAuth } from '../../hooks/useAuth';
 import { loginWithPKCE } from '../../apis/authApi';
 
 import styles from './LibraryHead.module.css';
-import useGetCurrentProfile from '../../hooks/useGetCurrentUserProfile';
-import { getSpotifyAuthUrl } from '../../utils/auth';
 
 const NavLink = styled(RouterNavLink)(({ theme }) => ({
   textDecoration: 'none',
@@ -36,7 +34,7 @@ const LibraryHead = () => {
   const is403 = isError && axios.isAxiosError(error) && error.response?.status === 403;
 
   const handleConfirm = (name: string) => {
-    mutate(name, { onSuccess: () => { setOpen(false); reset(); } });
+    mutate({ name }, { onSuccess: () => { setOpen(false); reset(); } });
   };
 
   const handleClose = () => { setOpen(false); reset(); };
@@ -45,17 +43,6 @@ const LibraryHead = () => {
     logout();
     loginWithPKCE();
   };
-
-  const { mutate: createPlaylist } = useCreatePlaylist();
-  const { data: userProfile } = useGetCurrentProfile();
-
-  const handleCreatePlaylist = () => {
-    if (userProfile) {
-      createPlaylist({ name: '나의 플레이리스트' });
-    } else {
-      getSpotifyAuthUrl();
-    }
-  }
 
   return (
     <>
@@ -66,7 +53,7 @@ const LibraryHead = () => {
             Your Library
           </Typography>
         </NavLink>
-        <Button sx={{ marginLeft: '50px' }} onClick={handleCreatePlaylist}>
+        <Button sx={{ marginLeft: '50px' }} onClick={() => setOpen(true)}>
           <AddIcon />
         </Button>
       </ul>

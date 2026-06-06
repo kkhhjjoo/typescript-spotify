@@ -20,7 +20,7 @@ const EmptyPlaylist = () => {
   const is403 = isError && axios.isAxiosError(error) && error.response?.status === 403;
 
   const handleConfirm = (name: string) => {
-    mutate(name, { onSuccess: () => { setOpen(false); reset(); } });
+    mutate({ name }, { onSuccess: () => { setOpen(false); reset(); } });
   };
 
   const handleClose = () => { setOpen(false); reset(); };
