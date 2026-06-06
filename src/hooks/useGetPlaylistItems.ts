@@ -8,6 +8,7 @@ const useGetPlaylistItems = (params: GetPlaylistItemsRequest) => {
     queryFn: ({ pageParam }) => {
       return getPlaylistItems({ ...params, offset: pageParam as number })
     },
+    enabled: !!params.playlistId,
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       if (lastPage.next) {
