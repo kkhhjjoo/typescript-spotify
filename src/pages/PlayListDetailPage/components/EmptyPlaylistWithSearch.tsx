@@ -27,9 +27,10 @@ const StyledTextField = styled(TextField)({
 
 interface EmptyPlaylistWithSearchProps {
   playlistId: string;
+  onAdded?: () => void;
 }
 
-const EmptyPlaylistWithSearch = ({ playlistId }: EmptyPlaylistWithSearchProps) => {
+const EmptyPlaylistWithSearch = ({ playlistId, onAdded }: EmptyPlaylistWithSearchProps) => {
   const [keyword, setKeyword] = useState<string>('');
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useSearchItemsByKeyword({
@@ -44,8 +45,9 @@ const EmptyPlaylistWithSearch = ({ playlistId }: EmptyPlaylistWithSearchProps) =
   const handleAdd = (track: Track) => {
     if (playlistId.startsWith('local-')) {
       addTrackToLocalPlaylist(playlistId, track);
+      onAdded?.();
     } else if (track.uri) {
-      addTrack({ playlistId, trackUri: track.uri });
+      addTrack({ playlistId, trackUri: track.uri }, { onSuccess: () => onAdded?.() });
     }
   };
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Navigate, useParams } from 'react-router';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getLocalPlaylists, getLocalPlaylistTracks } from '../../utils/localPlaylistManager';
 import useGetPlaylist from '../../hooks/useGetPlaylist';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
@@ -50,6 +51,7 @@ const PlayListDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [showSearch, setShowSearch] = useState(false);
   const { token } = useAuth();
+  const queryClient = useQueryClient();
 
   const isLocal = id?.startsWith('local-');
   const localPlaylist = isLocal ? getLocalPlaylists().find(p => p.id === id) : undefined;
@@ -60,6 +62,23 @@ const PlayListDetailPage = () => {
     limit: PAGE_LIMIT,
     offset: 0,
   });
+
+  const { data: localTracks = [] } = useQuery({
+    queryKey: ['local-playlist-tracks', id],
+    queryFn: () => getLocalPlaylistTracks(id ?? ''),
+    enabled: !!isLocal && !!id,
+    staleTime: 0,
+  });
+
+  const handleTrackAdded = () => {
+    setShowSearch(false);
+    if (isLocal) {
+      queryClient.invalidateQueries({ queryKey: ['local-playlist-tracks', id] });
+    } else {
+      queryClient.invalidateQueries({ queryKey: ['playlist-items'] });
+      queryClient.invalidateQueries({ queryKey: ['playlist-detail', id] });
+    }
+  };
 
   if (id === undefined) return <Navigate to="/" />;
 
@@ -74,7 +93,6 @@ const PlayListDetailPage = () => {
 
   if (!isLocal && (playlistError || itemsError)) return <ErrorMessage errorMessage="플레이리스트를 불러올 수 없어요." />;
 
-  const localTracks = isLocal && id ? getLocalPlaylistTracks(id) : [];
   const displayName = isLocal ? (localPlaylist?.name ?? '로컬 플레이리스트') : (playlist?.name ?? '플레이리스트');
   const coverUrl = !isLocal ? playlist?.images?.[0]?.url : undefined;
   const totalTracks = isLocal ? localTracks.length : (playlist?.track?.total ?? 0);
@@ -99,7 +117,7 @@ const PlayListDetailPage = () => {
         </div>
       </PlaylistHeader>
 
-      {showSearch && id && <EmptyPlaylistWithSearch playlistId={id} />}
+      {showSearch && id && <EmptyPlaylistWithSearch playlistId={id} onAdded={handleTrackAdded} />}
 
       {totalTracks === 0 && !showSearch ? (
         <p style={{ textAlign: 'center', color: 'gray', marginTop: '40px' }}>
