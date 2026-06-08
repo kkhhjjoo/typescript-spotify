@@ -1,10 +1,14 @@
-import type { ExternalUrls } from './commonType';
+import type { ExternalUrls, Followers, Image } from './commonType';
 
-export interface Artist { 
+export interface Artist {
   external_urls?: ExternalUrls;
   href?: string;
   id?: string;
   name?: string;
   type?: string;
   uri?: string;
+  images?: Image[];
+  followers?: Followers;
+  genres?: string[];
+  popularity?: number;
 }

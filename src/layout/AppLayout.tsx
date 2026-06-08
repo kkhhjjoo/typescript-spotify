@@ -59,7 +59,7 @@ const AppLayout = () => {
             </NavLink>
           </ul>
         </ContentBox>
-        <ContentBox sx={{ flex: 1, overflow: 'auto' }}>
+        <ContentBox sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
           <LibraryHead />
           <Library />
         </ContentBox>

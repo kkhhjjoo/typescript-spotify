@@ -25,8 +25,8 @@ export interface SearchRequestParams {
   include_external?: string;
 }
 
-export interface SearchResponse { 
-  artist?: ApiResponse<Artist>;
+export interface SearchResponse {
+  artists?: ApiResponse<Artist>;
   albums?: ApiResponse<SimplifiedAlbum>;
   tracks?: ApiResponse<Track>;
   playlists?: ApiResponse<SimplifiedPlaylist>;

@@ -8,13 +8,14 @@ import { ClipLoader } from 'react-spinners';
 
 const PlayListContainer = styled('div')(({ theme }) => ({
   overflowY: 'auto',
+  overflowX: 'hidden',
   maxHeight: 'calc(100vh - 240px)',
   height: '100%',
-  '&::-webkit-scollbar': {
+  '&::-webkit-scrollbar': {
     display: 'none',
-    msOverflowStyle: 'none', //IE and Edge
-    scrollbarWidth: 'none', //Firefox
   },
+  msOverflowStyle: 'none',
+  scrollbarWidth: 'none',
   [theme.breakpoints.down('sm')]: {
     maxHeight: 'calc(100vh = 65px - 119px)'
   }
