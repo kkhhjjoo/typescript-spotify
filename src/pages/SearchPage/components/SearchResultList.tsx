@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import useGetCurrentUserPlaylists from "../../../hooks/useGetCurrentUserPlaylists";
 import useAddTrackToPlaylist from "../../../hooks/useAddTrackToPlaylist";
+import { addTrackToLocalPlaylist } from "../../../utils/localPlaylistManager";
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   background: theme.palette.background.paper,
@@ -69,7 +70,7 @@ const SearchResultList = ({
 }: SearchResultListProps) => {
   const [ref, inView] = useInView();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const [selectedTrackUri, setSelectedTrackUri] = useState<string | null>(null);
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
 
   const { data: playlistData } = useGetCurrentUserPlaylists({ limit: 50, offset: 0 });
   const { mutate: addTrack, isPending } = useAddTrackToPlaylist();
@@ -85,20 +86,24 @@ const SearchResultList = ({
       onAdd(track);
       return;
     }
-    setSelectedTrackUri(track.uri ?? null);
+    setSelectedTrack(track);
     setMenuAnchor(e.currentTarget);
   };
 
   const handleSelectPlaylist = (playlistId: string) => {
-    if (!selectedTrackUri) return;
-    addTrack({ playlistId, trackUri: selectedTrackUri });
+    if (!selectedTrack) return;
+    if (playlistId.startsWith('local-')) {
+      addTrackToLocalPlaylist(playlistId, selectedTrack);
+    } else if (selectedTrack.uri) {
+      addTrack({ playlistId, trackUri: selectedTrack.uri });
+    }
     setMenuAnchor(null);
-    setSelectedTrackUri(null);
+    setSelectedTrack(null);
   };
 
   const handleCloseMenu = () => {
     setMenuAnchor(null);
-    setSelectedTrackUri(null);
+    setSelectedTrack(null);
   };
 
   return (

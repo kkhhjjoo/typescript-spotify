@@ -1,4 +1,4 @@
-import { InputAdornment, styled, TextField } from '@mui/material';
+import { CircularProgress, InputAdornment, styled, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useSearchItemsByKeyword } from '../../../hooks/useSearchItemsByKeyword';
 import SearchIcon from '@mui/icons-material/Search';
@@ -33,7 +33,7 @@ interface EmptyPlaylistWithSearchProps {
 const EmptyPlaylistWithSearch = ({ playlistId, onAdded }: EmptyPlaylistWithSearchProps) => {
   const [keyword, setKeyword] = useState<string>('');
 
-  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useSearchItemsByKeyword({
+  const { data, hasNextPage, isFetchingNextPage, isFetching, fetchNextPage } = useSearchItemsByKeyword({
     q: keyword,
     type: [SEARCH_TYPE.Track],
   });
@@ -70,7 +70,15 @@ const EmptyPlaylistWithSearch = ({ playlistId, onAdded }: EmptyPlaylistWithSearc
           },
         }}
       />
-      {keyword && (
+      {keyword && isFetching && tracks.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '24px' }}>
+          <CircularProgress size={24} />
+        </div>
+      )}
+      {keyword && !isFetching && tracks.length === 0 && (
+        <p style={{ textAlign: 'center', color: 'gray', marginTop: '24px' }}>검색 결과가 없어요.</p>
+      )}
+      {keyword && tracks.length > 0 && (
         <SearchResultList
           list={tracks}
           hasNextPage={hasNextPage ?? false}

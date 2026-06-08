@@ -72,8 +72,8 @@ const PlayListDetailPage = () => {
 
   const handleTrackAdded = () => {
     setShowSearch(false);
-    if (isLocal) {
-      queryClient.invalidateQueries({ queryKey: ['local-playlist-tracks', id] });
+    if (isLocal && id) {
+      queryClient.setQueryData(['local-playlist-tracks', id], getLocalPlaylistTracks(id));
     } else {
       queryClient.invalidateQueries({ queryKey: ['playlist-items'] });
       queryClient.invalidateQueries({ queryKey: ['playlist-detail', id] });
