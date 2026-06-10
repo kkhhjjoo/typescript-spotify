@@ -2,14 +2,22 @@ import { useQuery } from '@tanstack/react-query'
 import { getCurrentUserPlaylists } from '../apis/playlistApi';
 import type { GetCurrentUserPlaylistRequest } from '../models/playlist';
 import { useAuth } from '../contexts/AuthContext';
-import { getLocalPlaylists } from '../utils/localPlaylistManager';
+import { getLocalPlaylists, getLocalPlaylistTracks } from '../utils/localPlaylistManager';
 
 const useGetCurrentUserPlaylists = ({limit, offset }: GetCurrentUserPlaylistRequest) => {
   const { token } = useAuth();
 
   const localQuery = useQuery({
     queryKey: ['local-playlists'],
-    queryFn: getLocalPlaylists,
+    queryFn: () => {
+      const playlists = getLocalPlaylists();
+      return playlists.map((p) => {
+        const firstTrackImage = p.id ? getLocalPlaylistTracks(p.id)[0]?.track?.album?.images?.[0]?.url : undefined;
+        return firstTrackImage
+          ? { ...p, images: [{ url: firstTrackImage, width: 64, height: 64 }] }
+          : p;
+      });
+    },
     staleTime: 0,
   });
 

@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getLocalPlaylists, getLocalPlaylistTracks } from '../../utils/localPlaylistManager';
 import useGetPlaylist from '../../hooks/useGetPlaylist';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import { Button, styled, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Button, Snackbar, styled, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Grid } from '@mui/system';
 import DefaultImage from '../../common/components/DefaultImage';
 import useGetPlaylistItems from '../../hooks/useGetPlaylistItems';
@@ -50,6 +50,7 @@ const PlaylistMeta = styled('p')({
 const PlayListDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [showSearch, setShowSearch] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { token } = useAuth();
   const queryClient = useQueryClient();
 
@@ -72,8 +73,10 @@ const PlayListDetailPage = () => {
 
   const handleTrackAdded = () => {
     setShowSearch(false);
+    setSnackbarOpen(true);
     if (isLocal && id) {
       queryClient.setQueryData(['local-playlist-tracks', id], getLocalPlaylistTracks(id));
+      queryClient.invalidateQueries({ queryKey: ['local-playlists'] });
     } else {
       queryClient.invalidateQueries({ queryKey: ['playlist-items'] });
       queryClient.invalidateQueries({ queryKey: ['playlist-detail', id] });
@@ -94,7 +97,9 @@ const PlayListDetailPage = () => {
   if (!isLocal && (playlistError || itemsError)) return <ErrorMessage errorMessage="플레이리스트를 불러올 수 없어요." />;
 
   const displayName = isLocal ? (localPlaylist?.name ?? '로컬 플레이리스트') : (playlist?.name ?? '플레이리스트');
-  const coverUrl = !isLocal ? playlist?.images?.[0]?.url : undefined;
+  const coverUrl = isLocal
+    ? localTracks[0]?.track?.album?.images?.[0]?.url
+    : playlist?.images?.[0]?.url;
   const totalTracks = isLocal ? localTracks.length : (playlist?.track?.total ?? 0);
 
   return (
@@ -152,6 +157,13 @@ const PlayListDetailPage = () => {
           </TableBody>
         </Table>
       )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Added to Playlist"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
     </div>
   );
 };

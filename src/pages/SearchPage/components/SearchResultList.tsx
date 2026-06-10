@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Menu,
   MenuItem,
+  Snackbar,
   styled,
   Table,
   TableBody,
@@ -71,6 +72,7 @@ const SearchResultList = ({
   const [ref, inView] = useInView();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const { data: playlistData } = useGetCurrentUserPlaylists({ limit: 50, offset: 0 });
   const { mutate: addTrack, isPending } = useAddTrackToPlaylist();
@@ -94,8 +96,9 @@ const SearchResultList = ({
     if (!selectedTrack) return;
     if (playlistId.startsWith('local-')) {
       addTrackToLocalPlaylist(playlistId, selectedTrack);
+      setSnackbarOpen(true);
     } else if (selectedTrack.uri) {
-      addTrack({ playlistId, trackUri: selectedTrack.uri });
+      addTrack({ playlistId, trackUri: selectedTrack.uri }, { onSuccess: () => setSnackbarOpen(true) });
     }
     setMenuAnchor(null);
     setSelectedTrack(null);
@@ -161,6 +164,14 @@ const SearchResultList = ({
           ))}
         </Menu>
       )}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Added to Playlist"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
     </>
   );
 };
